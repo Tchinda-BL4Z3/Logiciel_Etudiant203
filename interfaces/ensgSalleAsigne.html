@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Salles Assignées Simplifiées - GestionEtudiant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1fadad",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#122020",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        body { font-family: 'Manrope', sans-serif; }
+        .sidebar-active { background-color: #f0f4f4; border-left: 4px solid #1fadad; }
+        @layer components {
+            .room-card {
+                @apply bg-white p-6 rounded-2xl border border-[#eef2f2] shadow-sm hover:shadow-md transition-shadow duration-300;
+            }
+            .status-tag {
+                @apply px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#fcfdfd] text-[#121717] font-display min-h-screen">
+<header class="sticky top-0 z-50 bg-white border-b border-[#f0f4f4] px-6 lg:px-12 py-3 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-7">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.8261 30.5736C16.7203 29.8826 20.2244 29.4783 24 29.4783C27.7756 29.4783 31.2797 29.8826 34.1739 30.5736C36.9144 31.2278 39.9967 32.7669 41.3563 33.8352L24.8486 7.36089C24.4571 6.73303 23.5429 6.73303 23.1514 7.36089L6.64374 33.8352C8.00331 32.7669 11.0856 31.2278 13.8261 30.5736Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M39.998 35.764C39.9944 35.7463 39.9875 35.7155 39.9748 35.6706C39.9436 35.5601 39.8949 35.4259 39.8346 35.2825C39.8168 35.2403 39.7989 35.1993 39.7813 35.1602C38.5103 34.2887 35.9788 33.0607 33.7095 32.5189C30.9875 31.8691 27.6413 31.4783 24 31.4783C20.3587 31.4783 17.0125 31.8691 14.2905 32.5189C12.0012 33.0654 9.44505 34.3104 8.18538 35.1832C8.17384 35.2075 8.16216 35.233 8.15052 35.2592C8.09919 35.3751 8.05721 35.4886 8.02977 35.589C8.00356 35.6848 8.00039 35.7333 8.00004 35.7388C8.00004 35.739 8 35.7393 8.00004 35.7388C8.00004 35.7641 8.0104 36.0767 8.68485 36.6314C9.34546 37.1746 10.4222 37.7531 11.9291 38.2772C14.9242 39.319 19.1919 40 24 40C28.8081 40 33.0758 39.319 36.0709 38.2772C37.5778 37.7531 38.6545 37.1746 39.3151 36.6314C39.9006 36.1499 39.9857 35.8511 39.998 35.764ZM4.95178 32.7688L21.4543 6.30267C22.6288 4.4191 25.3712 4.41909 26.5457 6.30267L43.0534 32.777C43.0709 32.8052 43.0878 32.8338 43.104 32.8629L41.3563 33.8352C43.104 32.8629 43.1038 32.8626 43.104 32.8629L43.1051 32.865L43.1065 32.8675L43.1101 32.8739L43.1199 32.8918C43.1276 32.906 43.1377 32.9246 43.1497 32.9473C43.1738 32.9925 43.2062 33.0545 43.244 33.1299C43.319 33.2792 43.4196 33.489 43.5217 33.7317C43.6901 34.1321 44 34.9311 44 35.7391C44 37.4427 43.003 38.7775 41.8558 39.7209C40.6947 40.6757 39.1354 41.4464 37.385 42.0552C33.8654 43.2794 29.133 44 24 44C18.867 44 14.1346 43.2794 10.615 42.0552C8.86463 41.4464 7.30529 40.6757 6.14419 39.7209C4.99695 38.7775 3.99999 37.4427 3.99999 35.7391C3.99999 34.8725 4.29264 34.0922 4.49321 33.6393C4.60375 33.3898 4.71348 33.1804 4.79687 33.0311C4.83898 32.9556 4.87547 32.8935 4.9035 32.8471C4.91754 32.8238 4.92954 32.8043 4.93916 32.7889L4.94662 32.777L4.95178 32.7688ZM35.9868 29.004L24 9.77997L12.0131 29.004C12.4661 28.8609 12.9179 28.7342 13.3617 28.6282C16.4281 27.8961 20.0901 27.4783 24 27.4783C27.9099 27.4783 31.5719 27.8961 34.6383 28.6282C35.082 28.7342 35.5339 28.8609 35.9868 29.004Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-[#121717] text-lg font-bold tracking-tight">GestionEtudiant</h2>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-[#121717]">Dr. Jean Dupont</p>
+<p class="text-[10px] text-primary uppercase font-bold tracking-wide">Espace Enseignant</p>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border border-primary/20" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD-o7Oi5ED-oKSOXD0fueDqTukCT_dOVjmCZapDyGgdQrks9ucU2XnHdjk5rEfDct_o2SGfxF36TG3ekYaTf7RVgKsDu2h_BH7-ioXC1Twnrk9mxKaAGBODXkj3T-OxZRdcjuPSFHUnPqPHKcXbWrh1_6lA5O06G1zjL4tyIFuNyjcqwgte1yoA2-rpe-1_rVVBURbF_TYGSQJxQOqJSI_o_jw_SiyIVPYKVg-YE3fAKENa_BypUOjaurTe2OVgvlM5JEyXazag1HU");'></div>
+</div>
+</div>
+</header>
+<div class="flex">
+<aside class="w-64 bg-white min-h-[calc(100vh-64px)] hidden lg:flex flex-col border-r border-[#f0f4f4] p-4 gap-6 sticky top-16">
+<nav class="flex flex-col gap-1 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#658686] hover:bg-[#f6f8f8] transition-all" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="text-sm font-medium">Tableau de bord</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl sidebar-active text-primary font-bold" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1">meeting_room</span>
+<span class="text-sm">Salles Assignées</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#658686] hover:bg-[#f6f8f8] transition-all" href="#">
+<span class="material-symbols-outlined text-xl">groups</span>
+<span class="text-sm font-medium">Mes Classes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#658686] hover:bg-[#f6f8f8] transition-all" href="#">
+<span class="material-symbols-outlined text-xl">calendar_today</span>
+<span class="text-sm font-medium">Emploi du temps</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#658686] hover:bg-[#f6f8f8] transition-all" href="#">
+<span class="material-symbols-outlined text-xl">description</span>
+<span class="text-sm font-medium">Ressources UE</span>
+</a>
+</nav>
+<div class="mt-auto p-4 border-t border-[#f0f4f4]">
+<button class="flex items-center gap-3 px-2 py-2 text-[#e53935] w-full text-sm font-semibold">
+<span class="material-symbols-outlined text-xl">logout</span>
+                Déconnexion
+            </button>
+</div>
+</aside>
+<main class="flex-1 p-8 lg:p-12">
+<div class="max-w-7xl mx-auto">
+<div class="mb-12">
+<h1 class="text-[#121717] text-3xl font-extrabold tracking-tight mb-3">Salles Assignées</h1>
+<p class="text-[#658686] text-base max-w-2xl leading-relaxed">
+                    Aperçu simplifié des espaces de cours qui vous sont assignés pour ce semestre.
+                </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+<div class="room-card group">
+<div class="flex justify-between items-start mb-6">
+<div class="p-2.5 bg-primary/5 rounded-xl group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-primary text-2xl">meeting_room</span>
+</div>
+<span class="status-tag bg-green-50 text-green-600 border border-green-100">Disponible</span>
+</div>
+<h3 class="text-xl font-bold text-[#121717] mb-1">Salle A-204</h3>
+<p class="text-[#658686] text-sm font-medium mb-6">Aile Nord • 2ème étage</p>
+<div class="flex items-center gap-2 text-[#658686]">
+<span class="material-symbols-outlined text-lg">group</span>
+<span class="text-sm font-bold">40 places</span>
+</div>
+</div>
+<div class="room-card group">
+<div class="flex justify-between items-start mb-6">
+<div class="p-2.5 bg-primary/5 rounded-xl">
+<span class="material-symbols-outlined text-primary text-2xl">meeting_room</span>
+</div>
+<span class="status-tag bg-orange-50 text-orange-600 border border-orange-100">Occupée</span>
+</div>
+<h3 class="text-xl font-bold text-[#121717] mb-1">Salle B-105</h3>
+<p class="text-[#658686] text-sm font-medium mb-6">Aile Sud • Rez-de-chaussée</p>
+<div class="flex items-center gap-2 text-[#658686]">
+<span class="material-symbols-outlined text-lg">group</span>
+<span class="text-sm font-bold">30 places</span>
+</div>
+</div>
+<div class="room-card group">
+<div class="flex justify-between items-start mb-6">
+<div class="p-2.5 bg-primary/5 rounded-xl">
+<span class="material-symbols-outlined text-primary text-2xl">meeting_room</span>
+</div>
+<span class="status-tag bg-green-50 text-green-600 border border-green-100">Disponible</span>
+</div>
+<h3 class="text-xl font-bold text-[#121717] mb-1">Amphi J</h3>
+<p class="text-[#658686] text-sm font-medium mb-6">Bâtiment Central • RDC</p>
+<div class="flex items-center gap-2 text-[#658686]">
+<span class="material-symbols-outlined text-lg">group</span>
+<span class="text-sm font-bold">120 places</span>
+</div>
+</div>
+<div class="room-card group">
+<div class="flex justify-between items-start mb-6">
+<div class="p-2.5 bg-primary/5 rounded-xl">
+<span class="material-symbols-outlined text-primary text-2xl">meeting_room</span>
+</div>
+<span class="status-tag bg-green-50 text-green-600 border border-green-100">Disponible</span>
+</div>
+<h3 class="text-xl font-bold text-[#121717] mb-1">Salle C-302</h3>
+<p class="text-[#658686] text-sm font-medium mb-6">Aile Ouest • 3ème étage</p>
+<div class="flex items-center gap-2 text-[#658686]">
+<span class="material-symbols-outlined text-lg">group</span>
+<span class="text-sm font-bold">25 places</span>
+</div>
+</div>
+<div class="room-card group">
+<div class="flex justify-between items-start mb-6">
+<div class="p-2.5 bg-primary/5 rounded-xl">
+<span class="material-symbols-outlined text-primary text-2xl">computer</span>
+</div>
+<span class="status-tag bg-orange-50 text-orange-600 border border-orange-100">Occupée</span>
+</div>
+<h3 class="text-xl font-bold text-[#121717] mb-1">Lab-04</h3>
+<p class="text-[#658686] text-sm font-medium mb-6">Dépt. Informatique • 1er étage</p>
+<div class="flex items-center gap-2 text-[#658686]">
+<span class="material-symbols-outlined text-lg">group</span>
+<span class="text-sm font-bold">20 postes</span>
+</div>
+</div>
+<div class="room-card group">
+<div class="flex justify-between items-start mb-6">
+<div class="p-2.5 bg-primary/5 rounded-xl">
+<span class="material-symbols-outlined text-primary text-2xl">meeting_room</span>
+</div>
+<span class="status-tag bg-green-50 text-green-600 border border-green-100">Disponible</span>
+</div>
+<h3 class="text-xl font-bold text-[#121717] mb-1">Salle A-208</h3>
+<p class="text-[#658686] text-sm font-medium mb-6">Aile Nord • 2ème étage</p>
+<div class="flex items-center gap-2 text-[#658686]">
+<span class="material-symbols-outlined text-lg">group</span>
+<span class="text-sm font-bold">35 places</span>
+</div>
+</div>
+</div>
+<div class="mt-20 p-8 rounded-2xl bg-[#f6f8f8] border border-[#eef2f2] flex flex-col md:flex-row items-center gap-8">
+<div class="flex-1">
+<h4 class="text-lg font-bold text-[#121717] mb-2">Une erreur dans vos assignations ?</h4>
+<p class="text-[#658686] text-sm leading-relaxed">
+                        Si une salle manque à cette liste ou si les horaires de disponibilité semblent incorrects, veuillez contacter le service de scolarité ou le responsable de département.
+                    </p>
+</div>
+<button class="px-6 py-3 bg-white border border-[#dce5e5] rounded-xl text-sm font-bold text-[#121717] hover:bg-gray-50 transition-colors">
+                    Signaler une erreur
+                </button>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

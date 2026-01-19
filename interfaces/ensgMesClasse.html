@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Enseignant : Mes Classes et Effectifs Détaillés - GestionEtudiant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1fadad",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#122020",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        body { font-family: 'Manrope', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); }
+        .sidebar-active { background-color: #f0f4f4; border-left: 4px solid #1fadad; }
+        @layer components {
+            .class-card {
+                @apply bg-white p-6 rounded-xl border border-[#dce5e5] shadow-sm hover:shadow-lg transition-all duration-300;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#121717] font-display min-h-screen">
+<header class="sticky top-0 z-50 bg-white border-b border-solid border-[#f0f4f4] px-6 lg:px-20 py-3 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.8261 30.5736C16.7203 29.8826 20.2244 29.4783 24 29.4783C27.7756 29.4783 31.2797 29.8826 34.1739 30.5736C36.9144 31.2278 39.9967 32.7669 41.3563 33.8352L24.8486 7.36089C24.4571 6.73303 23.5429 6.73303 23.1514 7.36089L6.64374 33.8352C8.00331 32.7669 11.0856 31.2278 13.8261 30.5736Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M39.998 35.764C39.9944 35.7463 39.9875 35.7155 39.9748 35.6706C39.9436 35.5601 39.8949 35.4259 39.8346 35.2825C39.8168 35.2403 39.7989 35.1993 39.7813 35.1602C38.5103 34.2887 35.9788 33.0607 33.7095 32.5189C30.9875 31.8691 27.6413 31.4783 24 31.4783C20.3587 31.4783 17.0125 31.8691 14.2905 32.5189C12.0012 33.0654 9.44505 34.3104 8.18538 35.1832C8.17384 35.2075 8.16216 35.233 8.15052 35.2592C8.09919 35.3751 8.05721 35.4886 8.02977 35.589C8.00356 35.6848 8.00039 35.7333 8.00004 35.7388C8.00004 35.739 8 35.7393 8.00004 35.7388C8.00004 35.7641 8.0104 36.0767 8.68485 36.6314C9.34546 37.1746 10.4222 37.7531 11.9291 38.2772C14.9242 39.319 19.1919 40 24 40C28.8081 40 33.0758 39.319 36.0709 38.2772C37.5778 37.7531 38.6545 37.1746 39.3151 36.6314C39.9006 36.1499 39.9857 35.8511 39.998 35.764ZM4.95178 32.7688L21.4543 6.30267C22.6288 4.4191 25.3712 4.41909 26.5457 6.30267L43.0534 32.777C43.0709 32.8052 43.0878 32.8338 43.104 32.8629L41.3563 33.8352C43.104 32.8629 43.1038 32.8626 43.104 32.8629L43.1051 32.865L43.1065 32.8675L43.1101 32.8739L43.1199 32.8918C43.1276 32.906 43.1377 32.9246 43.1497 32.9473C43.1738 32.9925 43.2062 33.0545 43.244 33.1299C43.319 33.2792 43.4196 33.489 43.5217 33.7317C43.6901 34.1321 44 34.9311 44 35.7391C44 37.4427 43.003 38.7775 41.8558 39.7209C40.6947 40.6757 39.1354 41.4464 37.385 42.0552C33.8654 43.2794 29.133 44 24 44C18.867 44 14.1346 43.2794 10.615 42.0552C8.86463 41.4464 7.30529 40.6757 6.14419 39.7209C4.99695 38.7775 3.99999 37.4427 3.99999 35.7391C3.99999 34.8725 4.29264 34.0922 4.49321 33.6393C4.60375 33.3898 4.71348 33.1804 4.79687 33.0311C4.83898 32.9556 4.87547 32.8935 4.9035 32.8471C4.91754 32.8238 4.92954 32.8043 4.93916 32.7889L4.94662 32.777L4.95178 32.7688ZM35.9868 29.004L24 9.77997L12.0131 29.004C12.4661 28.8609 12.9179 28.7342 13.3617 28.6282C16.4281 27.8961 20.0901 27.4783 24 27.4783C27.9099 27.4783 31.5719 27.8961 34.6383 28.6282C35.082 28.7342 35.5339 28.8609 35.9868 29.004Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-[#121717] text-xl font-bold tracking-tight">GestionEtudiant</h2>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-[#f0f4f4] p-2 rounded-lg hover:bg-gray-200 transition-colors">
+<span class="material-symbols-outlined text-[#121717]">notifications</span>
+</button>
+<div class="flex items-center gap-3 ml-2 pl-4 border-l border-[#f0f4f4]">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-[#121717]">Dr. Jean Dupont</p>
+<p class="text-[10px] text-primary uppercase font-bold">Enseignant</p>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBpjlMeD6V7iTr5UWKCnFi6mOXMXiW9TxGrIrIjaZbUflKrqPiuLPQzyEBHgZVIHOgpSwEj3UeZhYBE2B0plEn0YJEmykyK64VR4WTT9B-bbS77xce3iecULobqB-Jw_XcnJDKnk98c2QGhg1hX_DVt4G74iRCIkqpFheaKW1FaDmt2DNcnbjB5BhR18me2r1ishNeWqLCOQHtKd6d0Y05oKqoj9JWXjfS_R-POUO1HdX9KMxCn0oBbsv-d1GzZzsHGfn8wc4Bs3WI");'></div>
+</div>
+</div>
+</header>
+<div class="flex">
+<aside class="w-64 bg-white min-h-[calc(100vh-64px)] hidden lg:flex flex-col border-r border-[#f0f4f4] p-4 gap-6">
+<div>
+<h1 class="text-[#121717] text-sm font-semibold uppercase tracking-wider mb-4 opacity-50 px-4">Enseignant Console</h1>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#658686] hover:bg-[#f0f4f4] transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Tableau de bord</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#658686] hover:bg-[#f0f4f4] transition-all" href="#">
+<span class="material-symbols-outlined">meeting_room</span>
+<span>Salles Assignées</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl sidebar-active text-primary font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">groups</span>
+<span>Mes Classes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#658686] hover:bg-[#f0f4f4] transition-all" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span>Emploi du temps</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#658686] hover:bg-[#f0f4f4] transition-all" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Ressources UE</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-4 bg-primary/5 rounded-xl border border-primary/10">
+<p class="text-xs font-bold text-primary uppercase mb-1">Session Enseignant</p>
+<p class="text-sm font-medium text-[#121717]">Semestre 1 - 2023/24</p>
+</div>
+</aside>
+<main class="flex-1 p-6 lg:p-10 overflow-x-hidden">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<h1 class="text-[#121717] text-4xl font-black tracking-tight mb-2">Mes Classes</h1>
+<p class="text-[#658686] text-lg">Consultez et gérez vos classes ainsi que leurs effectifs détaillés.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center bg-white border border-[#dce5e5] rounded-xl px-4 py-2.5 w-72 shadow-sm focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent transition-all">
+<span class="material-symbols-outlined text-[#658686] text-xl mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full p-0 placeholder-[#658686]" placeholder="Rechercher une classe..." type="text"/>
+</div>
+<button class="bg-primary text-white font-bold py-2.5 px-5 rounded-xl flex items-center gap-2 hover:bg-[#188e8e] transition-all shadow-sm">
+<span class="material-symbols-outlined text-xl">download</span>
+<span>Exporter la liste</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<div class="class-card">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase">Actif</span>
+<h3 class="text-xl font-bold text-[#121717] mt-3">L3 Informatique - Gr. A</h3>
+<p class="text-sm text-[#658686]">Licence 3ème année</p>
+</div>
+<div class="bg-primary/10 text-primary p-3 rounded-xl">
+<span class="material-symbols-outlined">laptop_mac</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-[#658686] font-medium">Effectif actuel</span>
+<span class="font-bold text-[#121717]">35 / 40</span>
+</div>
+<div class="w-full bg-[#f0f4f4] h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 87.5%"></div>
+</div>
+<div class="pt-4 border-t border-[#f0f4f4] flex justify-between items-center">
+<span class="text-xs text-[#658686] italic font-medium">Sciences &amp; Tech</span>
+<button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
+                            Détails
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="class-card">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase">Actif</span>
+<h3 class="text-xl font-bold text-[#121717] mt-3">M1 Cybersécurité</h3>
+<p class="text-sm text-[#658686]">Master 1ère année</p>
+</div>
+<div class="bg-primary/10 text-primary p-3 rounded-xl">
+<span class="material-symbols-outlined">security</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-[#658686] font-medium">Effectif actuel</span>
+<span class="font-bold text-[#121717]">28 / 30</span>
+</div>
+<div class="w-full bg-[#f0f4f4] h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 93.3%"></div>
+</div>
+<div class="pt-4 border-t border-[#f0f4f4] flex justify-between items-center">
+<span class="text-xs text-[#658686] italic font-medium">Sécurité Info</span>
+<button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
+                            Détails
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="class-card">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="px-2.5 py-1 rounded-full bg-yellow-100 text-yellow-700 text-[10px] font-bold uppercase">En attente</span>
+<h3 class="text-xl font-bold text-[#121717] mt-3">L2 Math-Info</h3>
+<p class="text-sm text-[#658686]">Licence 2ème année</p>
+</div>
+<div class="bg-primary/10 text-primary p-3 rounded-xl">
+<span class="material-symbols-outlined">calculate</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-[#658686] font-medium">Effectif actuel</span>
+<span class="font-bold text-[#121717]">42 / 45</span>
+</div>
+<div class="w-full bg-[#f0f4f4] h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 93.3%"></div>
+</div>
+<div class="pt-4 border-t border-[#f0f4f4] flex justify-between items-center">
+<span class="text-xs text-[#658686] italic font-medium">Sciences</span>
+<button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
+                            Détails
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="class-card">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase">Actif</span>
+<h3 class="text-xl font-bold text-[#121717] mt-3">L3 Réseaux</h3>
+<p class="text-sm text-[#658686]">Licence 3ème année</p>
+</div>
+<div class="bg-primary/10 text-primary p-3 rounded-xl">
+<span class="material-symbols-outlined">lan</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-[#658686] font-medium">Effectif actuel</span>
+<span class="font-bold text-[#121717]">22 / 25</span>
+</div>
+<div class="w-full bg-[#f0f4f4] h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 88%"></div>
+</div>
+<div class="pt-4 border-t border-[#f0f4f4] flex justify-between items-center">
+<span class="text-xs text-[#658686] italic font-medium">Télécoms</span>
+<button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
+                            Détails
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="class-card">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase">Actif</span>
+<h3 class="text-xl font-bold text-[#121717] mt-3">M2 Cloud Computing</h3>
+<p class="text-sm text-[#658686]">Master 2ème année</p>
+</div>
+<div class="bg-primary/10 text-primary p-3 rounded-xl">
+<span class="material-symbols-outlined">cloud_queue</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-[#658686] font-medium">Effectif actuel</span>
+<span class="font-bold text-[#121717]">15 / 15</span>
+</div>
+<div class="w-full bg-[#f0f4f4] h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 100%"></div>
+</div>
+<div class="pt-4 border-t border-[#f0f4f4] flex justify-between items-center">
+<span class="text-xs text-[#658686] italic font-medium">Ingénierie</span>
+<button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
+                            Détails
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-transparent border-2 border-dashed border-[#dce5e5] p-6 rounded-xl flex flex-col items-center justify-center text-center gap-4 hover:bg-white/50 transition-all cursor-pointer group">
+<div class="size-12 rounded-full bg-white border border-[#dce5e5] flex items-center justify-center text-[#658686] group-hover:text-primary group-hover:border-primary transition-all">
+<span class="material-symbols-outlined">add</span>
+</div>
+<div>
+<p class="text-[#121717] font-bold">Ajouter une classe</p>
+<p class="text-xs text-[#658686]">Assignation manuelle ou import</p>
+</div>
+</div>
+</div>
+<div class="mt-12">
+<div class="bg-white rounded-xl border border-[#dce5e5] shadow-sm p-6">
+<h2 class="text-xl font-bold text-[#121717] mb-6">Statistiques Globales des Classes</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="flex flex-col gap-1">
+<p class="text-xs font-bold text-[#658686] uppercase tracking-wider">Total Étudiants</p>
+<p class="text-3xl font-black text-[#121717]">142</p>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-xs font-bold text-[#658686] uppercase tracking-wider">Capacité Totale</p>
+<p class="text-3xl font-black text-[#121717]">155</p>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-xs font-bold text-[#658686] uppercase tracking-wider">Taux de Remplissage</p>
+<p class="text-3xl font-black text-primary">91.6%</p>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-xs font-bold text-[#658686] uppercase tracking-wider">Groupes TD/TP</p>
+<p class="text-3xl font-black text-[#121717]">8</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>
