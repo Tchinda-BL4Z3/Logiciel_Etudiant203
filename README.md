@@ -93,7 +93,7 @@ Jusqu'à présent, nous avons réalisé les fondations solides du logiciel :
 
 1. **Cloner le projet**
    ```bash
-   git clone https://github.com/Tchinda-BL4Z3/Logiciel_Etudiants_203.git
+   git clone https://github.com/Tchinda-BL4Z3/Logiciel_Etudiant203.git
    cd Logiciel_Etudiants_203
    ```
 ### Étape 2 : Créer un fichier `.gitignore` (INDISPENSABLE)
