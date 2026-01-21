@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom'; // Ajoute useNavigate ici
+import { Link, useLocation, useNavigate } from 'react-router-dom'; 
 import { 
   LayoutDashboard, DoorOpen, Users, UserSquare2, 
   Gavel, ClipboardList, Search, Bell, Settings, LogOut 
