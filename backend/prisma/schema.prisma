@@ -16,28 +16,33 @@ generator client {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  nom       String
-  email     String   @unique
-  password  String
-  role      String   @default("TEACHER") // On utilise un String au lieu de Enum pour SQLite
-  ue        UE[]     
-  desid     Desiderata[]
+  id          Int      @id @default(autoincrement())
+  nom         String
+  email       String   @unique
+  password    String
+  role        String   @default("TEACHER") 
+  departement String?  
+  specialite  String?  
+  ue          UE[]     
+  desid       Desiderata[]
 }
 
 model Salle {
-  id        Int      @id @default(autoincrement())
-  nom       String   @unique
-  capacite  Int
-  sessions  Session[]
+  id          Int      @id @default(autoincrement())
+  nom         String   @unique
+  capacite    Int
+  departement String   @default("Informatique") 
+  batiment    String   @default("N/A")          
+  sessions    Session[]
 }
 
 model Classe {
-  id        Int      @id @default(autoincrement())
-  nom       String   @unique
-  effectif  Int
-  filiere   String
-  sessions  Session[]
+  id          Int       @id @default(autoincrement())
+  nom         String    @unique
+  effectif    Int
+  filiere     String
+  departement String    
+  sessions    Session[]
 }
 
 model UE {

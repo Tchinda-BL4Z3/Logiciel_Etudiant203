@@ -18,6 +18,8 @@ Ce projet vise à fournir une solution complète et moderne pour la gestion des 
 ### Pré-requis
 - Node.js (v18+)
 - npm
+- Backend : Créer les routes API pour envoyer les données de la base.
+- Frontend : Créer un service de connexion (Axios).
 
 ### 1. Configuration du Backend
 ```bash
@@ -93,7 +95,7 @@ Jusqu'à présent, nous avons réalisé les fondations solides du logiciel :
 
 1. **Cloner le projet**
    ```bash
-   git clone https://github.com/Tchinda-BL4Z3/Logiciel_Etudiant203.git
+   git clone https://github.com/Tchinda-BL4Z3/Logiciel_Etudiants_203.git
    cd Logiciel_Etudiants_203
    ```
 ### Étape 2 : Créer un fichier `.gitignore` (INDISPENSABLE)

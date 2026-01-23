@@ -6,36 +6,46 @@ import { GraduationCap, Users, ShieldCheck, ArrowLeft, ChevronRight } from 'luci
 const Login = () => {
   const navigate = useNavigate();
 
+  // redirections vers les formulaires de connexion
   const handleLogin = (role) => {
-    localStorage.setItem('userRole', role);
-    navigate('/dashboard');
+    if (role === 'TEACHER') {
+      // Redirection vers le formulaire de connexion Enseignant
+      navigate('/login/teacher'); 
+    } else if (role === 'ADMIN') {
+      // Redirection vers le formulaire de connexion Admin
+      navigate('/login/admin'); 
+    } else {
+      // Pour l'étudiant, on garde la redirection directe ou vers son espace
+      localStorage.setItem('userRole', 'STUDENT');
+      navigate('/dashboard'); 
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
-      {/* --- NAVBAR (Identique à Home) --- */}
+      {/* --- NAVBAR --- */}
       <nav className="flex justify-between items-center px-8 md:px-16 py-6 bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
         <Link to="/" className="flex items-center space-x-3 group">
-  {/* Logo Image UY1 */}
-  <img 
-    src={logoUY1} 
-    alt="Logo UY1" 
-    className="h-10 w-auto object-contain transition-transform group-hover:scale-105" 
-  />
-  
-  {/* Séparateur vertical discret */}
-  <div className="h-8 w-[1.5px] bg-gray-200"></div>
+          {/* Logo Image UY1 */}
+          <img 
+            src={logoUY1} 
+            alt="Logo UY1" 
+            className="h-10 w-auto object-contain transition-transform group-hover:scale-105" 
+          />
+          
+          {/* Séparateur vertical discret */}
+          <div className="h-8 w-[1.5px] bg-gray-200"></div>
 
-  {/* Texte du Logo */}
-  <div className="flex flex-col justify-center">
-    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-[0.2em] leading-none mb-1">
-      UY1 - ICT
-    </span>
-    <span className="text-lg font-black text-[#1E293B] tracking-tight leading-none">
-      EDT Universitaire
-    </span>
-  </div>
-</Link>
+          {/* Texte du Logo */}
+          <div className="flex flex-col justify-center">
+            <span className="text-[9px] font-bold text-blue-600 uppercase tracking-[0.2em] leading-none mb-1">
+              UY1 - ICT
+            </span>
+            <span className="text-lg font-black text-[#1E293B] tracking-tight leading-none">
+              EDT Universitaire
+            </span>
+          </div>
+        </Link>
         
         <div className="hidden md:flex items-center space-x-8 text-sm font-semibold text-gray-600">
           <Link to="/" className="hover:text-blue-600 transition-colors">Accueil</Link>
@@ -96,7 +106,7 @@ const Login = () => {
 
             {/* Option Admin */}
             <button 
-                onClick={() => navigate('/login/admin')} 
+                onClick={() => handleLogin('ADMIN')} 
                 className="w-full group bg-white p-6 rounded-[24px] border border-gray-100 shadow-sm hover:shadow-xl hover:border-slate-200 transition-all flex items-center justify-between"
             >
               <div className="flex items-center">
