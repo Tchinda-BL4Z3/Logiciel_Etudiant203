@@ -1,8 +1,6 @@
-Voici une mise à jour exhaustive et professionnelle de votre fichier **README.md**. Elle intègre toutes les fonctionnalités développées (y compris les pages À propos, Contact, et la gestion des vœux avec notice), les détails techniques, et les instructions de déploiement multi-plateformes sans aucune compression d'information.
-
 ---
 
-# 🎓 UniPortal - Système de Gestion d'Emploi du Temps
+# 🎓 EDT-Universitaire - Système de Gestion d'Emploi du Temps
 ### Projet Académique ICT 203 | Année 2025/2026 | Université de Yaoundé I (UY1)
 
 **UniPortal** est une solution logicielle de pointe conçue pour moderniser la planification académique au sein de l'UY1. Elle répond aux problématiques complexes de gestion des ressources (salles/enseignants) tout en offrant une interface utilisateur fluide et intuitive pour l'ensemble de la communauté universitaire.
