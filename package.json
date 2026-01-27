@@ -1,0 +1,56 @@
+{
+  "name": "etd-university",
+  "version": "1.0.0",
+  "description": "Système de gestion d'emploi du temps universitaire - UY1 ICT 203",
+  "main": "main.js",
+  "scripts": {
+    "start": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\" \"npm run open-app\"",
+    "open-app": "node -e \"const exec = require('child_process').exec; const url = 'http://localhost:5173'; const cmd = process.platform === 'win32' ? 'start chrome --app=' + url : 'google-chrome --app=' + url + ' --new-window'; setTimeout(() => exec(cmd), 3000)\"",
+    "electron:dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\" \"wait-on http://localhost:5173 && electron .\"",
+    "electron:build": "npm run build --prefix frontend && electron-builder"
+  },
+  "keywords": [
+    "university",
+    "timetable",
+    "management",
+    "electron"
+  ],
+  "author": "Groupe - ICT 203",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.4.0",
+    "open-cli": "^8.0.0",
+    "wait-on": "^8.0.0"
+  },
+  "build": {
+    "appId": "com.groupe6.etd-university",
+    "productName": "ETD-universitaire",
+    "copyright": "Copyright © 2026 Groupe ICT203",
+    "directories": {
+      "output": "dist_electron"
+    },
+    "files": [
+      "main.js",
+      "backend/**/*",
+      "frontend/dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "backend/prisma/dev.db",
+        "to": "backend/prisma/dev.db"
+      }
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "frontend/public/favicon.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "Education"
+    }
+  }
+}
