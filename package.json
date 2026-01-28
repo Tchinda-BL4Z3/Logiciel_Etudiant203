@@ -1,6 +1,6 @@
 {
   "name": "etd-university",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Système de gestion d'emploi du temps universitaire - UY1 ICT 203",
   "main": "main.js",
   "scripts": {
@@ -8,7 +8,9 @@
     "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\" \"npm run open-app\"",
     "open-app": "node -e \"const exec = require('child_process').exec; const url = 'http://localhost:5173'; const cmd = process.platform === 'win32' ? 'start chrome --app=' + url : 'google-chrome --app=' + url + ' --new-window'; setTimeout(() => exec(cmd), 3000)\"",
     "electron:dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\" \"wait-on http://localhost:5173 && electron .\"",
-    "electron:build": "npm run build --prefix frontend && electron-builder"
+    "electron:build": "npm run build --prefix frontend && cd backend && npm install --production && npx prisma generate && cd .. && electron-builder",
+    "build:linux": "npm run build --prefix frontend && cd backend && npm install --production && npx prisma generate && cd .. && electron-builder --linux",
+    "build:win": "npm run build --prefix frontend && cd backend && npm install --production && npx prisma generate && cd .. && electron-builder --win"
   },
   "keywords": [
     "university",
@@ -40,10 +42,19 @@
     ],
     "extraResources": [
       {
-        "from": "backend/prisma/dev.db",
-        "to": "backend/prisma/dev.db"
+        "from": "backend",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!node_modules/@prisma/engines/**"
+        ]
+      },
+      {
+        "from": "backend/node_modules",
+        "to": "backend/node_modules"
       }
     ],
+    "asar": false,
     "win": {
       "target": "portable",
       "icon": "frontend/public/favicon.ico"

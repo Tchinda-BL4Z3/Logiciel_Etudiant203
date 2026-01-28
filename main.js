@@ -8,9 +8,9 @@ let serverProcess;
 function startBackend() {
   // Lance le serveur Node.js du dossier backend
   // En production, on pointera vers le binaire compilé
-  const backendPath = isDev 
-    ? "node backend/server.js" 
-    : path.join(process.resourcesPath, 'backend/server.js');
+  const backendPath = isDev
+    ? "node backend/src/server.js"
+    : `node ${path.join(process.resourcesPath, 'backend/src/start-server.js')}`;
 
   serverProcess = exec(backendPath, (error) => {
     if (error) console.error(`Erreur Backend: ${error}`);
@@ -31,7 +31,8 @@ function createWindow() {
   if (isDev) {
     win.loadURL('http://localhost:5173');
   } else {
-    win.loadFile(path.join(__dirname, 'frontend/dist/index.html'));
+    const indexPath = path.join(__dirname, 'frontend/dist/index.html');
+    win.loadFile(indexPath);
   }
 }
 

@@ -6,6 +6,11 @@ const multer = require('multer');
 const fs = require('fs');
 require('dotenv').config();
 
+// Configuration pour l'environnement packagé
+if (process.resourcesPath) {
+    process.env.DATABASE_URL = `file:${path.join(process.resourcesPath, 'backend/prisma/dev.db')}`;
+}
+
 // ============================================================
 // --- INITIALISATION ---
 // ============================================================
@@ -17,7 +22,10 @@ app.use(cors());
 app.use(express.json());
 
 // 1. On définit le chemin du dossier uploads
-const uploadsPath = path.join(__dirname, '../uploads');
+const isPackaged = process.resourcesPath !== undefined;
+const uploadsPath = isPackaged 
+    ? path.join(require('os').tmpdir(), 'etd-uploads')
+    : path.join(__dirname, '../uploads');
 
 // 2. On vérifie (et crée si besoin) le dossier pour éviter les erreurs 404
 if (!fs.existsSync(uploadsPath)) {
@@ -794,7 +802,7 @@ app.get('/api/conflicts', async (req, res) => {
 // ============================================================
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
+  destination: (req, file, cb) => cb(null, uploadsPath),
   filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
 const upload = multer({ storage });

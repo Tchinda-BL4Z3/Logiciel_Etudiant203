@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Nécessaire pour la redirection
 import AdminLayout from '../components/AdminLayout';
-import { getStats, getClasses, getTeachers, getStudents } from '../services/api'; 
-import axios from 'axios'; 
-import { 
-  Users, DoorOpen, ClipboardCheck, AlertTriangle, 
-  Search, Layers, Home, UserSquare2, GraduationCap, 
+import { getStats, getClasses, getTeachers, getStudents } from '../services/api';
+import axios from 'axios';
+import {
+  Users, DoorOpen, ClipboardCheck, AlertTriangle,
+  Search, Layers, Home, UserSquare2, GraduationCap,
   MoreHorizontal, Filter, Trash2, Lock, X, ShieldAlert, Mail, Hash, LogOut
 } from 'lucide-react';
 
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
   const [teachersList, setTeachersList] = useState([]);
   const [studentsList, setStudentsList] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   const [activeTab, setActiveTab] = useState('CLASSES');
 
   // --- 2. ÉTAT DES FILTRES ---
@@ -51,9 +51,12 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
+
+      // Récupération des statistiques globales
       const resStats = await getStats();
       if (resStats.data) setStats(resStats.data);
 
+      // Récupération des Classes
       const resClasses = await getClasses();
       if (resClasses.data) {
         setClassesList(resClasses.data.map(c => ({
@@ -64,25 +67,34 @@ const AdminDashboard = () => {
         })));
       }
 
+      // Récupération des Enseignants
       const resTeachers = await getTeachers();
       if (resTeachers.data) {
-        setTeachersList(resTeachers.data.map(t => ({
+        const teachers = resTeachers.data.map(t => ({
           ...t,
           dept: t.departement || 'Informatique',
           charge: 60,
           statut: 'Actif'
-        })));
+        }));
+        setTeachersList(teachers);
+        // Mise à jour de la stat si l'API stats est en retard
+        setStats(prev => ({ ...prev, countTeachers: teachers.length }));
       }
 
+      // Récupération des Étudiants
       const resStudents = await getStudents();
       if (resStudents.data) {
-        setStudentsList(resStudents.data.map(s => ({
+        const students = resStudents.data.map(s => ({
           ...s,
           dept: s.filiere || 'Informatique',
           niveau: s.classe?.nom || 'N/A',
           prog: 85,
           statut: 'Inscrit'
-        })));
+        }));
+        setStudentsList(students);
+
+        // CORRECTION : Mise à jour immédiate du compteur d'étudiants en haut
+        setStats(prev => ({ ...prev, totalEtudiants: students.length }));
       }
 
       setLoading(false);
@@ -105,7 +117,11 @@ const AdminDashboard = () => {
       try {
         const response = await axios.delete(`http://localhost:5000/api/users/${studentToDelete.id}`);
         if (response.status === 200) {
-          setStudentsList(studentsList.filter(s => s.id !== studentToDelete.id));
+          const newList = studentsList.filter(s => s.id !== studentToDelete.id);
+          setStudentsList(newList);
+          // Mise à jour du compteur après suppression
+          setStats(prev => ({ ...prev, totalEtudiants: newList.length }));
+
           setShowDeleteModal(false);
           setStudentToDelete(null);
           setAdminPassword('');
@@ -122,12 +138,9 @@ const AdminDashboard = () => {
 
   // --- LOGIQUE DE DÉCONNEXION ---
   const handleConfirmLogout = () => {
-    // Nettoyage des données de session
     localStorage.removeItem('userRole');
     localStorage.removeItem('currentUser');
     localStorage.removeItem('isAdminAuthenticated');
-    
-    // Fermer la modal et rediriger
     setShowLogoutModal(false);
     navigate('/login');
   };
@@ -158,7 +171,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* --- SECTION 1 : CHIFFRES CLÉS --- */}
+      {/* --- SECTION 1 : CHIFFRES CLÉS (Statistiques) --- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
         {[
           { label: 'Étudiants', val: stats.totalEtudiants, icon: Users, color: 'blue', sub: 'Effectif total' },
@@ -184,33 +197,33 @@ const AdminDashboard = () => {
 
       {/* --- SECTION 2 : CONTENEUR PRINCIPAL DES LISTES --- */}
       <div className="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
-        
+
         <div className="p-6 border-b border-slate-50 bg-slate-50/30">
           <div className="flex flex-col space-y-6">
-            
+
             <div className="flex items-center space-x-2 bg-slate-100 p-1.5 rounded-2xl w-fit">
-              <button 
-                onClick={() => {setActiveTab('CLASSES'); setFilters({...filters, recherche: ''})}}
+              <button
+                onClick={() => { setActiveTab('CLASSES'); setFilters({ ...filters, recherche: '' }) }}
                 className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'CLASSES' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
               >
-                <div className="flex items-center"><Layers size={14} className="mr-2"/> Classes</div>
+                <div className="flex items-center"><Layers size={14} className="mr-2" /> Classes</div>
               </button>
-              <button 
-                onClick={() => {setActiveTab('TEACHERS'); setFilters({...filters, recherche: ''})}}
+              <button
+                onClick={() => { setActiveTab('TEACHERS'); setFilters({ ...filters, recherche: '' }) }}
                 className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'TEACHERS' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
               >
-                <div className="flex items-center"><UserSquare2 size={14} className="mr-2"/> Enseignants</div>
+                <div className="flex items-center"><UserSquare2 size={14} className="mr-2" /> Enseignants</div>
               </button>
-              <button 
-                onClick={() => {setActiveTab('STUDENTS'); setFilters({...filters, recherche: ''})}}
+              <button
+                onClick={() => { setActiveTab('STUDENTS'); setFilters({ ...filters, recherche: '' }) }}
                 className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'STUDENTS' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
               >
-                <div className="flex items-center"><GraduationCap size={14} className="mr-2"/> Étudiants</div>
+                <div className="flex items-center"><GraduationCap size={14} className="mr-2" /> Étudiants</div>
               </button>
             </div>
 
             <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
-               <h3 className="text-lg font-bold text-slate-800 italic">
+              <h3 className="text-lg font-bold text-slate-800 italic">
                 {activeTab === 'CLASSES' && "Gestion des Promotions"}
                 {activeTab === 'TEACHERS' && "Corps Enseignant"}
                 {activeTab === 'STUDENTS' && "Registre des Étudiants"}
@@ -220,25 +233,25 @@ const AdminDashboard = () => {
               <div className="flex flex-wrap gap-3 w-full lg:w-auto justify-end">
                 <div className="relative flex-1 min-w-[200px]">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                  <input 
+                  <input
                     type="text" placeholder={`Rechercher ${activeTab === 'CLASSES' ? 'une classe' : 'un nom'}...`}
                     className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium"
                     value={filters.recherche}
-                    onChange={(e) => setFilters({...filters, recherche: e.target.value})}
+                    onChange={(e) => setFilters({ ...filters, recherche: e.target.value })}
                   />
                 </div>
 
-                <select 
+                <select
                   className="py-2.5 px-4 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-600 outline-none hover:border-blue-300 transition-colors"
                   value={filters.departement}
-                  onChange={(e) => setFilters({...filters, departement: e.target.value})}
+                  onChange={(e) => setFilters({ ...filters, departement: e.target.value })}
                 >
                   <option value="Tous">Tous les Fileres</option>
-                    <option value="Informatique">Informatique</option>
-                    <option value="Mathématiques">Mathématiques</option>
-                    <option value="Physique">Physique</option>
-                    <option value="Chimie">Chimie</option>
-                    <option value="Biologie">Biologie</option>
+                  <option value="Informatique">Informatique</option>
+                  <option value="Mathématiques">Mathématiques</option>
+                  <option value="Physique">Physique</option>
+                  <option value="Chimie">Chimie</option>
+                  <option value="Biologie">Biologie</option>
                 </select>
               </div>
             </div>
@@ -290,11 +303,10 @@ const AdminDashboard = () => {
                   <tr key={item.id} className="hover:bg-slate-50/50 transition-colors group">
                     <td className="px-8 py-6">
                       <div className="flex items-center space-x-3 text-left">
-                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-[10px] border ${
-                          activeTab === 'CLASSES' ? 'bg-blue-50 text-blue-600 border-blue-100' :
-                          activeTab === 'TEACHERS' ? 'bg-purple-50 text-purple-600 border-purple-100' :
-                          'bg-emerald-50 text-emerald-600 border-emerald-100'
-                        }`}>
+                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-[10px] border ${activeTab === 'CLASSES' ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                            activeTab === 'TEACHERS' ? 'bg-purple-50 text-purple-600 border-purple-100' :
+                              'bg-emerald-50 text-emerald-600 border-emerald-100'
+                          }`}>
                           {(item.nom || item.name || 'X').substring(0, 2).toUpperCase()}
                         </div>
                         <span className="font-bold text-slate-800 text-sm tracking-tight">{item.nom || item.name}</span>
@@ -306,10 +318,10 @@ const AdminDashboard = () => {
                         {activeTab === 'STUDENTS' ? (
                           <div className="space-y-1.5">
                             <p className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-900 text-white font-black text-[10px] tracking-widest italic shadow-sm">
-                              <Hash size={10} className="mr-1 text-blue-400"/> {item.matricule || 'NON ATTRIBUÉ'}
+                              <Hash size={10} className="mr-1 text-blue-400" /> {item.matricule || 'NON ATTRIBUÉ'}
                             </p>
                             <p className="text-[10px] text-blue-600 font-bold italic flex items-center lowercase tracking-normal">
-                              <Mail size={11} className="mr-1.5 text-blue-400"/> {item.email || 'non-renseigné@uy1.cm'}
+                              <Mail size={11} className="mr-1.5 text-blue-400" /> {item.email || 'non-renseigné@uy1.cm'}
                             </p>
                             <p className="text-[8px] text-slate-400 font-black uppercase tracking-[1px]">{item.dept || item.specialite}</p>
                           </div>
@@ -327,20 +339,19 @@ const AdminDashboard = () => {
                     </td>
 
                     <td className="px-8 py-6 text-center font-black text-[#1d76f2] italic text-sm">
-                      {activeTab === 'CLASSES' ? item.effectif : 
-                       activeTab === 'TEACHERS' ? '12h / sem' : 
-                       item.niveau}
+                      {activeTab === 'CLASSES' ? item.effectif :
+                        activeTab === 'TEACHERS' ? '12h / sem' :
+                          item.niveau}
                     </td>
 
                     <td className="px-8 py-6 w-56">
                       <div className="flex items-center space-x-3">
                         <div className="flex-1 bg-slate-100 h-1.5 rounded-full overflow-hidden shadow-inner">
-                          <div 
-                            className={`h-full transition-all duration-1000 ${
-                              activeTab === 'TEACHERS' ? 'bg-purple-500' : 
-                              activeTab === 'STUDENTS' ? 'bg-emerald-500' : 'bg-[#1d76f2]'
-                            }`} 
-                            style={{width: `${item.prog || item.charge || 45}%`}}
+                          <div
+                            className={`h-full transition-all duration-1000 ${activeTab === 'TEACHERS' ? 'bg-purple-500' :
+                                activeTab === 'STUDENTS' ? 'bg-emerald-500' : 'bg-[#1d76f2]'
+                              }`}
+                            style={{ width: `${item.prog || item.charge || 45}%` }}
                           ></div>
                         </div>
                         <span className="text-[9px] font-black text-slate-300 italic">{item.prog || item.charge || 45}%</span>
@@ -348,27 +359,25 @@ const AdminDashboard = () => {
                     </td>
 
                     <td className="px-8 py-6 text-center">
-                      <span className={`text-[8px] font-black px-2.5 py-1 rounded-lg uppercase border tracking-widest ${
-                        item.statut === 'Actif' || item.statut === 'Complet' || item.statut === 'Inscrit'
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
-                        : 'bg-blue-50 text-blue-700 border-blue-100'
-                      }`}>
+                      <span className={`text-[8px] font-black px-2.5 py-1 rounded-lg uppercase border tracking-widest ${item.statut === 'Actif' || item.statut === 'Complet' || item.statut === 'Inscrit'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                          : 'bg-blue-50 text-blue-700 border-blue-100'
+                        }`}>
                         {item.statut}
                       </span>
                     </td>
 
                     <td className="px-8 py-6 text-right">
                       <div className="flex items-center justify-end space-x-2">
-                        <button className={`text-[10px] font-black px-4 py-2 rounded-xl transition-all border border-transparent shadow-sm uppercase tracking-widest ${
-                          activeTab === 'CLASSES' ? 'text-[#1d76f2] hover:bg-blue-50' :
-                          activeTab === 'TEACHERS' ? 'text-purple-600 hover:bg-purple-50' :
-                          'text-emerald-600 hover:bg-emerald-50'
-                        }`}>
+                        <button className={`text-[10px] font-black px-4 py-2 rounded-xl transition-all border border-transparent shadow-sm uppercase tracking-widest ${activeTab === 'CLASSES' ? 'text-[#1d76f2] hover:bg-blue-50' :
+                            activeTab === 'TEACHERS' ? 'text-purple-600 hover:bg-purple-50' :
+                              'text-emerald-600 hover:bg-emerald-50'
+                          }`}>
                           Détails
                         </button>
-                        
+
                         {activeTab === 'STUDENTS' && (
-                          <button 
+                          <button
                             onClick={() => handleDeleteClick(item)}
                             className="p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
                             title="Supprimer l'étudiant de la BD"
@@ -386,7 +395,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* --- MODAL DE SUPPRESSION (EXISTANTE) --- */}
+      {/* --- MODAL DE SUPPRESSION --- */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-md rounded-[32px] shadow-2xl overflow-hidden border border-red-50 animate-in zoom-in-95 duration-300">
@@ -410,7 +419,7 @@ const AdminDashboard = () => {
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Identification requise</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
-                    <input 
+                    <input
                       type="password"
                       placeholder="Entrez votre mot de passe admin"
                       className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500/20 outline-none transition-all"
@@ -428,13 +437,13 @@ const AdminDashboard = () => {
               </div>
 
               <div className="flex space-x-3 mt-10">
-                <button 
+                <button
                   onClick={() => setShowDeleteModal(false)}
                   className="flex-1 py-4 text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-slate-50 rounded-2xl transition-all"
                 >
                   Annuler
                 </button>
-                <button 
+                <button
                   onClick={confirmDelete}
                   className="flex-1 py-4 bg-red-600 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl shadow-red-100 hover:bg-red-700 hover:scale-[1.02] transition-all"
                 >
@@ -446,7 +455,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* --- NOUVELLE MODAL DE DÉCONNEXION --- */}
+      {/* --- MODAL DE DÉCONNEXION --- */}
       {showLogoutModal && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
           <div className="bg-white w-full max-w-sm rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden border border-slate-100 animate-in zoom-in-95 duration-300">
@@ -454,20 +463,20 @@ const AdminDashboard = () => {
               <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-[24px] flex items-center justify-center mx-auto mb-6 shadow-inner">
                 <LogOut size={32} />
               </div>
-              
+
               <h2 className="text-2xl font-black text-slate-800 uppercase italic leading-tight">Déconnexion</h2>
               <p className="text-slate-400 text-sm mt-3 font-medium leading-relaxed">
                 Voulez-vous vraiment quitter votre session administrative sécurisée ?
               </p>
 
               <div className="flex flex-col space-y-3 mt-10">
-                <button 
+                <button
                   onClick={handleConfirmLogout}
                   className="w-full py-4 bg-blue-600 text-white font-black text-xs uppercase tracking-[2px] rounded-2xl shadow-xl shadow-blue-100 hover:bg-blue-700 hover:scale-[1.02] transition-all"
                 >
                   Se déconnecter
                 </button>
-                <button 
+                <button
                   onClick={() => setShowLogoutModal(false)}
                   className="w-full py-4 text-slate-400 font-black text-xs uppercase tracking-[2px] hover:bg-slate-50 rounded-2xl transition-all"
                 >
@@ -475,17 +484,14 @@ const AdminDashboard = () => {
                 </button>
               </div>
             </div>
-            <div className="bg-slate-50 py-3 text-center border-t border-slate-100">
-               <p className="text-[7px] text-slate-300 font-black uppercase tracking-[5px]">Session Admin • Fin de session</p>
-            </div>
           </div>
         </div>
       )}
 
       <div className="mt-10 p-6 bg-white border border-slate-100 rounded-[24px] text-center">
-         <p className="text-[9px] text-slate-300 font-bold uppercase tracking-[4px]">
-           Système de Gestion Centralisé • Console de Haute Sécurité v1.0
-         </p>
+        <p className="text-[9px] text-slate-300 font-bold uppercase tracking-[4px]">
+          Système de Gestion Centralisé • Console de Haute Sécurité v1.0
+        </p>
       </div>
     </AdminLayout>
   );

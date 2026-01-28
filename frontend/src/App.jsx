@@ -1,17 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 
 // --- IMPORTS DES PAGES (ORDRE ALPHABÉTIQUE / CATÉGORIE) ---
 import Home from './pages/Home';
 import Login from './pages/Login';
 import RegisterStudent from './pages/RegisterStudent';
-import Dashboard from './pages/Dashboard'; 
+import Dashboard from './pages/Dashboard';
 import About from './pages/About';
 import Contact from './pages/Contact';
 
 // --- PAGES ADMINISTRATION ---
 import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard'; 
+import AdminDashboard from './pages/AdminDashboard';
 import AdminSalles from './pages/AdminSalles';
 import AdminTeachers from './pages/AdminTeachers';
 import AdminClasses from './pages/AdminClasses';
@@ -29,7 +29,7 @@ import TeacherResources from './pages/TeacherResources';
 import StudentDashboard from './pages/StudentDashboard';
 import StudentTimetable from './pages/StudentTimetable';
 import StudentLogin from './pages/StudentLogin';
-import StudentResources from './pages/StudentResources'; 
+import StudentResources from './pages/StudentResources';
 import StudentProfile from './pages/StudentProfile';
 
 /**
@@ -66,7 +66,7 @@ function App() {
 
         {/* --- ROUTES ÉTUDIANTS --- */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />
-        <Route path="/student/timetable" element={<StudentTimetable />} /> 
+        <Route path="/student/timetable" element={<StudentTimetable />} />
         <Route path="/login/student" element={<StudentLogin />} />
         <Route path="/student/resources" element={<StudentResources />} />
         <Route path="/student/profile" element={<StudentProfile />} />
@@ -74,7 +74,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register-student" element={<RegisterStudent />} />
-        
+
       </Routes>
     </Router>
   );
