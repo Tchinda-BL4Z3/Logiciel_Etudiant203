@@ -17,6 +17,7 @@ import AdminTeachers from './pages/AdminTeachers';
 import AdminClasses from './pages/AdminClasses';
 import AdminVoeux from './pages/AdminVoeux';
 import AdminArbitrage from './pages/AdminArbitrage';
+import FilierePage from './pages/FilierePage';
 
 // --- PAGES ENSEIGNANTS ---
 import TeacherLogin from './pages/TeacherLogin';
@@ -56,6 +57,7 @@ function App() {
         <Route path="/admin/classes" element={<AdminClasses />} />
         <Route path="/admin/voeux" element={<AdminVoeux />} />
         <Route path="/admin/arbitrage" element={<AdminArbitrage />} />
+        <Route path="/admin/filieres" element={<FilierePage />} />
 
         {/* --- ROUTES ENSEIGNANTS --- */}
         <Route path="/login/teacher" element={<TeacherLogin />} />

@@ -3,9 +3,11 @@ import StudentLayout from '../components/StudentLayout';
 import { Calendar as CalendarIcon, Clock, MapPin, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
 
-// Ajout de "Dimanche" à la liste des jours
+// Jours de la semaine
 const DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-const SLOTS = ["08:00 - 10:00", "10:00 - 12:00", "13:00 - 15:00", "15:00 - 17:00", "17:00 - 19:00"];
+
+// Mise à jour des créneaux selon l'image fournie (3h par séance avec pauses)
+const SLOTS = ["8h00-11h00", "11h30-14h30", "15h00-18h00"];
 
 const StudentTimetable = () => {
   const [sessions, setSessions] = useState([]);
@@ -30,6 +32,7 @@ const StudentTimetable = () => {
 
   return (
     <StudentLayout>
+      {/* En-tête de la page */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
         <div className="text-left">
           <h1 className="text-4xl font-black text-slate-800 uppercase italic tracking-tighter">
@@ -40,6 +43,7 @@ const StudentTimetable = () => {
           </p>
         </div>
 
+        {/* Navigation Semaine */}
         <div className="flex items-center space-x-2 bg-white p-2 rounded-2xl border border-slate-100 shadow-sm">
           <button className="p-2 hover:bg-slate-50 rounded-xl text-slate-400 transition-all"><ChevronLeft size={20}/></button>
           <span className="px-4 text-xs font-black uppercase tracking-widest text-slate-600">Semaine Actuelle</span>
@@ -66,21 +70,28 @@ const StudentTimetable = () => {
               <tbody>
                 {SLOTS.map(slot => (
                   <tr key={slot} className="group">
+                    {/* Colonne des horaires (ajustée aux nouveaux créneaux) */}
                     <td className="p-6 border-r border-b border-slate-50 bg-slate-50/20">
                       <div className="flex items-center space-x-2 text-slate-400">
                         <Clock size={14} />
-                        <span className="text-[10px] font-black italic">{slot}</span>
+                        <span className="text-[11px] font-black italic">{slot}</span>
                       </div>
                     </td>
+
+                    {/* Cellules de cours par jour */}
                     {DAYS.map(day => {
                       const session = sessions.find(s => s.jour === day && s.plageHoraire === slot);
                       return (
-                        <td key={day} className="p-3 border-b border-slate-50 min-w-[200px] h-40 align-top">
+                        <td key={day} className="p-3 border-b border-slate-50 min-w-[200px] h-44 align-top">
                           {session ? (
                             <div className="h-full bg-blue-50/50 border border-blue-100 p-4 rounded-3xl text-left flex flex-col justify-between hover:bg-blue-600 hover:border-blue-600 group/card transition-all duration-300">
                               <div>
-                                <p className="text-[9px] font-black text-blue-600 group-hover/card:text-blue-100 uppercase tracking-widest mb-1">{session.ue.code}</p>
-                                <h4 className="text-sm font-black text-slate-800 group-hover/card:text-white leading-tight uppercase italic">{session.ue.nom}</h4>
+                                <p className="text-[9px] font-black text-blue-600 group-hover/card:text-blue-100 uppercase tracking-widest mb-1">
+                                  {session.ue.code}
+                                </p>
+                                <h4 className="text-sm font-black text-slate-800 group-hover/card:text-white leading-tight uppercase italic">
+                                  {session.ue.nom}
+                                </h4>
                               </div>
                               
                               <div className="space-y-2 mt-4">
@@ -112,6 +123,7 @@ const StudentTimetable = () => {
         </div>
       )}
       
+      {/* Footer de l'emploi du temps */}
       <div className="mt-8 flex items-center justify-center space-x-6 text-[10px] font-black text-slate-300 uppercase tracking-[4px]">
         <span>UY1 - ICT 203</span>
         <div className="w-1.5 h-1.5 bg-slate-200 rounded-full"></div>

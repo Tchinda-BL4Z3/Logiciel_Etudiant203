@@ -23,7 +23,7 @@ const AdminTeachers = () => {
   const [newTeacher, setNewTeacher] = useState({ 
     nom: '', 
     email: '', 
-    departement: 'Informatique', 
+    departement: 'ICT4D', 
     specialite: '',
     ueCode: '', 
     password: '' 
@@ -63,7 +63,7 @@ const AdminTeachers = () => {
       await createTeacher(newTeacher);
       setShowAddModal(false); 
       setNewTeacher({ 
-        nom: '', email: '', departement: 'Informatique', 
+        nom: '', email: '', departement: 'ICT4D', 
         specialite: '', ueCode: '', password: '' 
       });
       fetchTeachers();
@@ -292,7 +292,8 @@ const AdminTeachers = () => {
                 <div className="space-y-2">
                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Département</label>
                    <select className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none cursor-pointer" onChange={(e) => setNewTeacher({...newTeacher, departement: e.target.value})} value={newTeacher.departement}>
-                    <option value="Informatique">Informatique</option>
+                    <option value="ICT4D">ICT4D</option>
+                    <option value="Info Fonda">Info Fonda</option>
                     <option value="Mathématiques">Mathématiques</option>
                     <option value="Physique">Physique</option>
                     <option value="Chimie">Chimie</option>
@@ -348,7 +349,8 @@ const AdminTeachers = () => {
                 <div>
                   <label className="text-[10px] font-bold text-slate-400 uppercase ml-2 tracking-widest">Département</label>
                   <select className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none cursor-pointer" value={editData.departement} onChange={(e) => setEditData({...editData, departement: e.target.value})}>
-                    <option value="Informatique">Informatique</option>
+                    <option value="ICT4D">ICT4D</option>
+                    <option value="Info Fonda">Info Fonda</option>
                     <option value="Mathématiques">Mathématiques</option>
                     <option value="Physique">Physique</option>
                     <option value="Chimie">Chimie</option>

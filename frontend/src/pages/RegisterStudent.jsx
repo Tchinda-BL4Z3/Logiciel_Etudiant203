@@ -8,7 +8,7 @@ const RegisterStudent = () => {
   const navigate = useNavigate();
   
   const [allClasses, setAllClasses] = useState([]);
-  const [departments, setDepartments] = useState([]); // Contiendra la liste complète
+  const [departments, setDepartments] = useState([]); // Contiendra la liste complète des filières
   const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
@@ -27,10 +27,11 @@ const RegisterStudent = () => {
         const classesData = response.data;
         setAllClasses(classesData);
 
-        // EXTRACTION AUTOMATIQUE DE TOUS LES DÉPARTEMENTS UNIQUES
+        // EXTRACTION DYNAMIQUE DE TOUTES LES FILIÈRES (DÉPARTEMENTS) UNIQUES
+        // Cette logique récupère tout ce qui est présent en base de données
         const uniqueDepts = [...new Set(classesData.map(c => c.departement))]
                             .filter(dept => dept && dept.trim() !== "")
-                            .sort(); // Tri alphabétique
+                            .sort(); // Tri alphabétique pour une liste propre
         
         setDepartments(uniqueDepts);
         setLoading(false);
@@ -45,11 +46,11 @@ const RegisterStudent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // On envoie l'objet formData complet qui contient bien le 'matricule'
+      // Envoi des données vers le backend
       await axios.post('http://localhost:5000/api/register-student', {
         nom: formData.nom,
         email: formData.email,
-        matricule: formData.matricule, // <--- Assure-toi que le backend reçoit bien cette clé
+        matricule: formData.matricule,
         password: formData.password,
         classeId: parseInt(formData.classeId)
       });
@@ -61,6 +62,7 @@ const RegisterStudent = () => {
     }
   };
 
+  // Filtrage des classes en fonction de la filière sélectionnée
   const filteredClasses = allClasses.filter(c => c.departement === formData.departement);
 
   return (
@@ -87,20 +89,23 @@ const RegisterStudent = () => {
               <h2 className="text-3xl font-bold mb-6 leading-tight">Rejoignez votre communauté.</h2>
               <p className="text-blue-100 text-base leading-relaxed">Inscrivez-vous pour accéder à votre emploi du temps officiel.</p>
             </div>
+            <div className="text-[10px] opacity-50 not-italic font-medium uppercase tracking-widest">
+              Année Académique 2025/2026
+            </div>
           </div>
 
           {/* --- FORMULAIRE --- */}
           <div className="flex-1 p-8 md:p-14">
-            <button onClick={() => navigate(-1)} className="flex items-center text-gray-400 hover:text-blue-600 mb-8 font-bold text-sm">
+            <button onClick={() => navigate(-1)} className="flex items-center text-gray-400 hover:text-blue-600 mb-8 font-bold text-sm transition-colors">
               <ArrowLeft size={16} className="mr-2" /> Retour
             </button>
 
             <h1 className="text-4xl font-black text-[#1E293B] mb-10 text-left">Inscription Étudiant</h1>
 
             {loading ? (
-              <div className="flex flex-col items-center py-20 italic">
+              <div className="flex flex-col items-center py-20 italic text-gray-500">
                 <Loader2 className="animate-spin text-blue-600 mb-4" size={40} />
-                <p>Récupération des départements...</p>
+                <p className="font-medium">Chargement des filières disponibles...</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6 text-left">
@@ -113,7 +118,7 @@ const RegisterStudent = () => {
                       type="text" 
                       required 
                       placeholder="Nom complet" 
-                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" 
+                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold transition-all" 
                       onChange={(e) => setFormData({...formData, nom: e.target.value})} 
                     />
                   </div>
@@ -123,7 +128,7 @@ const RegisterStudent = () => {
                       type="email" 
                       required 
                       placeholder="Email institutionnel" 
-                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" 
+                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold transition-all" 
                       onChange={(e) => setFormData({...formData, email: e.target.value})} 
                     />
                   </div>
@@ -137,7 +142,7 @@ const RegisterStudent = () => {
                       type="text" 
                       required 
                       placeholder="N° Matricule" 
-                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" 
+                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold transition-all" 
                       onChange={(e) => setFormData({...formData, matricule: e.target.value})} 
                     />
                   </div>
@@ -150,9 +155,9 @@ const RegisterStudent = () => {
                       value={formData.departement}
                       onChange={(e) => setFormData({...formData, departement: e.target.value, classeId: ''})}
                     >
-                      <option value=""> : Filieres</option>
+                      <option value="">Sélectionner une Filière</option>
                       {departments.map(dept => (
-                        <option key={dept} value={dept} className="bg-white text-slate-700">{dept}</option>
+                        <option key={dept} value={dept}>{dept}</option>
                       ))}
                     </select>
                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" size={18} />
@@ -166,11 +171,11 @@ const RegisterStudent = () => {
                     <select 
                       required 
                       disabled={!formData.departement}
-                      className="w-full pl-12 pr-10 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold appearance-none disabled:opacity-50"
+                      className="w-full pl-12 pr-10 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold appearance-none disabled:opacity-50 transition-all"
                       value={formData.classeId}
                       onChange={(e) => setFormData({...formData, classeId: e.target.value})}
                     >
-                      <option value="">{formData.departement ? "Choisir votre classe" : "Sélectionnez un département"}</option>
+                      <option value="">{formData.departement ? "Choisir votre niveau / classe" : "En attente de filière..."}</option>
                       {filteredClasses.map(cls => <option key={cls.id} value={cls.id}>{cls.nom}</option>)}
                     </select>
                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={18} />
@@ -182,7 +187,7 @@ const RegisterStudent = () => {
                       type="password" 
                       required 
                       placeholder="Mot de passe" 
-                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" 
+                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold transition-all" 
                       onChange={(e) => setFormData({...formData, password: e.target.value})} 
                     />
                   </div>
@@ -190,7 +195,7 @@ const RegisterStudent = () => {
 
                 <button 
                   type="submit" 
-                  className="w-full bg-[#1d76f2] text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-blue-100 hover:scale-[1.01] transition-all mt-6"
+                  className="w-full bg-[#1d76f2] text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-blue-100 hover:scale-[1.01] hover:bg-blue-600 transition-all mt-6"
                 >
                   Finaliser l'inscription
                 </button>
@@ -201,7 +206,7 @@ const RegisterStudent = () => {
       </main>
 
       <footer className="bg-white border-t border-gray-100 py-8 text-center text-gray-400 text-[10px] font-bold uppercase tracking-widest">
-        <p>© 2025/2026 EDT Universitaire • Université de Yaoundé I</p>
+        <p>© 2025/2026 EDT Universitaire • Université de Yaoundé I • ICT</p>
       </footer>
     </div>
   );

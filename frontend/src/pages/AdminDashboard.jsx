@@ -51,9 +51,12 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
+      
+      // Récupération des statistiques globales
       const resStats = await getStats();
       if (resStats.data) setStats(resStats.data);
 
+      // Récupération des Classes
       const resClasses = await getClasses();
       if (resClasses.data) {
         setClassesList(resClasses.data.map(c => ({
@@ -64,25 +67,34 @@ const AdminDashboard = () => {
         })));
       }
 
+      // Récupération des Enseignants
       const resTeachers = await getTeachers();
       if (resTeachers.data) {
-        setTeachersList(resTeachers.data.map(t => ({
+        const teachers = resTeachers.data.map(t => ({
           ...t,
           dept: t.departement || 'Informatique',
           charge: 60,
           statut: 'Actif'
-        })));
+        }));
+        setTeachersList(teachers);
+        // Mise à jour de la stat si l'API stats est en retard
+        setStats(prev => ({ ...prev, countTeachers: teachers.length }));
       }
 
+      // Récupération des Étudiants
       const resStudents = await getStudents();
       if (resStudents.data) {
-        setStudentsList(resStudents.data.map(s => ({
+        const students = resStudents.data.map(s => ({
           ...s,
           dept: s.filiere || 'Informatique',
           niveau: s.classe?.nom || 'N/A',
           prog: 85,
           statut: 'Inscrit'
-        })));
+        }));
+        setStudentsList(students);
+        
+        // CORRECTION : Mise à jour immédiate du compteur d'étudiants en haut
+        setStats(prev => ({ ...prev, totalEtudiants: students.length }));
       }
 
       setLoading(false);
@@ -105,7 +117,11 @@ const AdminDashboard = () => {
       try {
         const response = await axios.delete(`http://localhost:5000/api/users/${studentToDelete.id}`);
         if (response.status === 200) {
-          setStudentsList(studentsList.filter(s => s.id !== studentToDelete.id));
+          const newList = studentsList.filter(s => s.id !== studentToDelete.id);
+          setStudentsList(newList);
+          // Mise à jour du compteur après suppression
+          setStats(prev => ({ ...prev, totalEtudiants: newList.length }));
+          
           setShowDeleteModal(false);
           setStudentToDelete(null);
           setAdminPassword('');
@@ -122,12 +138,9 @@ const AdminDashboard = () => {
 
   // --- LOGIQUE DE DÉCONNEXION ---
   const handleConfirmLogout = () => {
-    // Nettoyage des données de session
     localStorage.removeItem('userRole');
     localStorage.removeItem('currentUser');
     localStorage.removeItem('isAdminAuthenticated');
-    
-    // Fermer la modal et rediriger
     setShowLogoutModal(false);
     navigate('/login');
   };
@@ -158,7 +171,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* --- SECTION 1 : CHIFFRES CLÉS --- */}
+      {/* --- SECTION 1 : CHIFFRES CLÉS (Statistiques) --- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
         {[
           { label: 'Étudiants', val: stats.totalEtudiants, icon: Users, color: 'blue', sub: 'Effectif total' },
@@ -233,12 +246,13 @@ const AdminDashboard = () => {
                   value={filters.departement}
                   onChange={(e) => setFilters({...filters, departement: e.target.value})}
                 >
-                  <option value="Tous">Tous les Fileres</option>
-                    <option value="Informatique">Informatique</option>
-                    <option value="Mathématiques">Mathématiques</option>
-                    <option value="Physique">Physique</option>
-                    <option value="Chimie">Chimie</option>
-                    <option value="Biologie">Biologie</option>
+                  <option value="Tous">Tous les Filières</option>
+                  <option value="ICT4D">ICT4D</option>
+                  <option value="Info Fonda">Info Fonda</option>
+                  <option value="Mathématiques">Mathématiques</option>
+                  <option value="Physique">Physique</option>
+                  <option value="Chimie">Chimie</option>
+                  <option value="Biologie">Biologie</option>
                 </select>
               </div>
             </div>
@@ -386,7 +400,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* --- MODAL DE SUPPRESSION (EXISTANTE) --- */}
+      {/* --- MODAL DE SUPPRESSION --- */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-md rounded-[32px] shadow-2xl overflow-hidden border border-red-50 animate-in zoom-in-95 duration-300">
@@ -446,7 +460,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* --- NOUVELLE MODAL DE DÉCONNEXION --- */}
+      {/* --- MODAL DE DÉCONNEXION --- */}
       {showLogoutModal && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
           <div className="bg-white w-full max-w-sm rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden border border-slate-100 animate-in zoom-in-95 duration-300">
@@ -474,9 +488,6 @@ const AdminDashboard = () => {
                   Annuler
                 </button>
               </div>
-            </div>
-            <div className="bg-slate-50 py-3 text-center border-t border-slate-100">
-               <p className="text-[7px] text-slate-300 font-black uppercase tracking-[5px]">Session Admin • Fin de session</p>
             </div>
           </div>
         </div>

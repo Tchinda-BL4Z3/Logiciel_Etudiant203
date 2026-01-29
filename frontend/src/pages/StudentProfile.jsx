@@ -135,7 +135,7 @@ const StudentProfile = () => {
                   <div>
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter leading-none mb-1">Filière / Spécialité</p>
                     <p className="font-bold text-sm text-slate-700 leading-none">
-                      {profile?.filiere || 'Tronc Commun ICT'}
+                      {profile?.filiere || 'Tronc Commun '}
                     </p>
                   </div>
                 </div>

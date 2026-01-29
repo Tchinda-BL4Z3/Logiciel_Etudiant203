@@ -22,7 +22,7 @@ const AdminClasses = () => {
   const [newClasse, setNewClasse] = useState({ 
     nom: '', 
     effectif: '', 
-    departement: 'Informatique', 
+    departement: 'ICT4D', // Valeur par défaut mise à jour
     filiere: '' 
   });
 
@@ -30,7 +30,7 @@ const AdminClasses = () => {
   const [editData, setEditData] = useState({ 
     nom: '', 
     effectif: '', 
-    departement: 'Informatique', 
+    departement: 'ICT4D', 
     filiere: '' 
   });
 
@@ -59,7 +59,7 @@ const AdminClasses = () => {
     setEditData({
       nom: cls.nom,
       effectif: cls.effectif,
-      departement: cls.departement || 'Informatique',
+      departement: cls.departement || 'ICT4D',
       filiere: cls.filiere || ''
     });
     setShowEditModal(true);
@@ -75,7 +75,7 @@ const AdminClasses = () => {
       await createClasse(dataToSend);
       fetchClasses();
       setShowAddModal(false);
-      setNewClasse({ nom: '', effectif: '', departement: 'Informatique', filiere: '' });
+      setNewClasse({ nom: '', effectif: '', departement: 'ICT4D', filiere: '' });
     } catch (error) { 
       alert("Erreur lors de l'ajout : Vérifiez que le nom est unique."); 
     }
@@ -276,11 +276,12 @@ const AdminClasses = () => {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] ml-2">Département d'attache</label>
                   <select 
-                    className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none cursor-pointer"
+                    className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none cursor-pointer focus:ring-2 focus:ring-blue-500"
                     onChange={(e) => setNewClasse({...newClasse, departement: e.target.value})}
                     value={newClasse.departement}
                   >
-                    <option value="Informatique">Informatique</option>
+                    <option value="ICT4D">ICT4D</option>
+                    <option value="Info Fonda">Info Fonda</option>
                     <option value="Mathématiques">Mathématiques</option>
                     <option value="Physique">Physique</option>
                     <option value="Chimie">Chimie</option>
@@ -348,7 +349,8 @@ const AdminClasses = () => {
                     onChange={(e) => setEditData({...editData, departement: e.target.value})}
                     value={editData.departement}
                   >
-                    <option value="Informatique">Informatique</option>
+                    <option value="ICT4D">ICT4D</option>
+                    <option value="Info Fonda">Info Fonda</option>
                     <option value="Mathématiques">Mathématiques</option>
                     <option value="Physique">Physique</option>
                     <option value="Chimie">Chimie</option>

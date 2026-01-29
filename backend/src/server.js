@@ -674,7 +674,7 @@ app.put('/api/sessions/:id', async (req, res) => {
   }
 });
 
-// ============================================================
+// ============================================================  
 // --- 9. GESTION DES VOEUX (DESIDERATA) --- ARBITRAGE
 // ============================================================
 
@@ -789,7 +789,40 @@ app.get('/api/conflicts', async (req, res) => {
   }
 });
 
-// ============================================================
+app.get('/api/sessions', async (req, res) => {
+  try {
+    const sessions = await prisma.session.findMany({
+      include: {
+        ue: { include: { enseignant: true } },
+        classe: true,
+        salle: true
+      },
+      orderBy: { id: 'desc' }
+    });
+
+    // On transforme les données pour le Frontend
+    const formatted = sessions.map(s => ({
+      id: s.id,
+      filiere: s.classe.filiere,
+      ueCode: s.ue.code,
+      ueName: s.ue.nom,
+      profName: s.ue.enseignant.nom, 
+      classeName: s.classe.nom,
+      effectif: s.classe.effectif, 
+      jour: s.jour,
+      plageHoraire: s.plageHoraire,
+      salleName: s.salle.nom,
+      salleCapacite: s.salle.capacite
+    }));
+
+    res.json(formatted);
+  } catch (error) {
+    res.status(500).json({ error: "Erreur lors de la récupération des sessions" });
+  }
+});
+
+
+// ============================================================ 
 // --- 10. UPLOAD ET FICHIERS ---
 // ============================================================
 

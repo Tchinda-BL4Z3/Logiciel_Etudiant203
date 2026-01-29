@@ -41,12 +41,11 @@ const TeacherClasses = () => {
       return;
     }
     try {
-      // Utilisation de routes qui correspondent exactement à ton server.js
       const [resSalles, resClasses, resUEs, resSessions] = await Promise.all([
         axios.get('http://localhost:5000/api/salles'),
         axios.get('http://localhost:5000/api/classes'),
         axios.get(`http://localhost:5000/api/teachers/${teacherId}/ues`),
-        axios.get(`http://localhost:5000/api/teachers/${teacherId}/sessions`) // Correction de la route ici
+        axios.get(`http://localhost:5000/api/teachers/${teacherId}/sessions`)
       ]);
       
       setSalles(resSalles.data || []);
@@ -56,7 +55,6 @@ const TeacherClasses = () => {
 
     } catch (err) {
       console.error("Détails de l'erreur de chargement :", err);
-      // On ne déclenche l'alerte rouge que si les données critiques manquent
       triggerNotification("Erreur lors du chargement des données", "error");
     }
   };
@@ -305,7 +303,10 @@ const TeacherClasses = () => {
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block mb-3 italic text-left">Plage Horaire</label>
                   <select required value={formData.plageHoraire} onChange={e => setFormData({...formData, plageHoraire: e.target.value})} className="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl outline-none font-bold text-slate-700 transition-all uppercase text-sm">
                     <option value="">Choisir l'heure...</option>
-                    <option>08:00 - 10:00</option><option>10:00 - 12:00</option><option>13:00 - 15:00</option><option>15:00 - 17:00</option><option>17:00 - 19:00</option>
+                    {/* PLAGES HORAIRES MISES À JOUR POUR CORRESPONDRE À L'IMAGE */}
+                    <option>8h00-11h00</option>
+                    <option>11h30-14h30</option>
+                    <option>15h00-18h00</option>
                   </select>
                 </div>
               </div>

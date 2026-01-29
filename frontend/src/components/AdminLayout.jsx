@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom'; 
 import { 
   LayoutDashboard, DoorOpen, Users, UserSquare2, 
-  Gavel, ClipboardList, Search, Bell, Settings, LogOut, X, AlertTriangle, ShieldQuestion
+  Gavel, ClipboardList, Search, Bell, Settings, LogOut, X, AlertTriangle, ShieldQuestion,
+  CalendarRange // Nouvel icône pour les emplois du temps par filière
 } from 'lucide-react';
 import logoUY1 from '../assets/logo_uy1.png';
 
@@ -27,6 +28,7 @@ const AdminLayout = ({ children }) => {
 
   const menuItems = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+    { name: 'Emploi Filières', path: '/admin/filieres', icon: CalendarRange }, // Nouveau lien ajouté ici
     { name: 'Salles', path: '/admin/salles', icon: DoorOpen },
     { name: 'Classes', path: '/admin/classes', icon: Users },
     { name: 'Enseignants', path: '/admin/enseignants', icon: UserSquare2 },

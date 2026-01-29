@@ -24,7 +24,7 @@ const AdminSalles = () => {
   const [newSalle, setNewSalle] = useState({ 
     nom: '', 
     capacite: '', 
-    departement: 'Informatique', // Valeur par défaut
+    departement: 'ICT4D', // Mis à jour avec une valeur par défaut valide
     batiment: 'N/A' 
   });
 
@@ -60,11 +60,10 @@ const AdminSalles = () => {
   const handleAddSalle = async (e) => {
     e.preventDefault();
     try {
-      // On envoie l'objet newSalle qui contient maintenant le département
       await createSalle(newSalle);
       fetchSalles();
       setShowModal(false);
-      setNewSalle({ nom: '', capacite: '', departement: 'Informatique', batiment: 'N/A' });
+      setNewSalle({ nom: '', capacite: '', departement: 'ICT4D', batiment: 'N/A' });
     } catch (error) { 
       alert("Erreur lors de l'ajout"); 
     }
@@ -72,7 +71,6 @@ const AdminSalles = () => {
 
   // --- LOGIQUE MODIFICATION (UPDATE) ---
   const openEditModal = (salle) => {
-    // On s'assure que toutes les propriétés sont copiées, y compris le département
     setEditModal({ show: true, salle: { ...salle } });
   };
 
@@ -211,7 +209,7 @@ const AdminSalles = () => {
                             Disponible
                           </span>
                         </td>
-                        <td className="px-8 py-6 text-right text-left">
+                        <td className="px-8 py-6 text-right">
                           <div className="flex justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-all">
                             <button 
                               onClick={() => openEditModal(salle)}
@@ -274,7 +272,8 @@ const AdminSalles = () => {
                     onChange={(e) => setNewSalle({...newSalle, departement: e.target.value})}
                     value={newSalle.departement}
                     >
-                        <option value="Informatique">Informatique</option>
+                        <option value="ICT4D">ICT4D</option>
+                        <option value="Info Fonda">Info Fonda</option>
                         <option value="Mathématiques">Mathématiques</option>
                         <option value="Physique">Physique</option>
                         <option value="Chimie">Chimie</option>
@@ -351,11 +350,12 @@ const AdminSalles = () => {
                         salle: { ...editModal.salle, departement: e.target.value }
                     })}
                     >
-                        <option value="Informatique">Informatique</option>
-                        <option value="Mathématiques">Mathématiques</option>
-                        <option value="Physique">Physique</option>
-                        <option value="Chimie">Chimie</option>
-                        <option value="Biologie">Biologie</option>
+                      <option value="ICT4D">ICT4D</option>
+                      <option value="Info Fonda">Info Fonda</option>
+                      <option value="Mathématiques">Mathématiques</option>
+                      <option value="Physique">Physique</option>
+                      <option value="Chimie">Chimie</option>
+                      <option value="Biologie">Biologie</option>
                     </select>
                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" size={20} />
                 </div>
